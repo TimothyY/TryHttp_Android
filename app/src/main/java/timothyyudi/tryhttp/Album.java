@@ -1,7 +1,7 @@
 package timothyyudi.tryhttp;
 
 /**
- * Created by root on 6/8/2016.
+ * A model class to contain album information
  */
 public class Album {
 

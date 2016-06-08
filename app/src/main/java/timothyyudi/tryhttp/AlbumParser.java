@@ -10,10 +10,11 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by root on 6/8/2016.
+ * Our own defined parser to read json object from itunes.
  */
 public class AlbumParser {
 
+    /**read the json, find the trackname and trackid. Finally, show it to the user using toast.*/
     public void parseJSONToAlbum(Context ctx, JSONObject source){
         ArrayList<Album> albums=new ArrayList<>();
         try {

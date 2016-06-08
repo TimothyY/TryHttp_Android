@@ -29,9 +29,10 @@ public class MainActivity extends AppCompatActivity {
 
         ctx = this;
         DemoTask task = new DemoTask();
-        task.execute();
+        task.execute(); //start requesting data from internet
     }
 
+    /**read byte data pulled from internet and convert it to string*/
     private String readStream(InputStream is) {
         try {
             ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**A background task which request data from internet*/
     private class DemoTask extends AsyncTask<Void, Void, String> {
 
         protected String doInBackground(Void... urls) {
@@ -65,9 +67,9 @@ public class MainActivity extends AppCompatActivity {
         protected void onProgressUpdate(Integer... progress) {}
 
         protected void onPostExecute(String result) {
-            AlbumParser albumParser = new AlbumParser();
+            AlbumParser albumParser = new AlbumParser(); //preparing an object of AlbumParser class
             try {
-                albumParser.parseJSONToAlbum(ctx, new JSONObject(result));
+                albumParser.parseJSONToAlbum(ctx, new JSONObject(result)); //convert the string to JSON object and then read it using our own parser
             } catch (JSONException e) {
                 e.printStackTrace();
             }
