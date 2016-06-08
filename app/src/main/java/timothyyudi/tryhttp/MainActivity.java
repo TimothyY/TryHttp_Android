@@ -1,10 +1,14 @@
 package timothyyudi.tryhttp;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -16,14 +20,16 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
+    Context ctx;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ctx = this;
         DemoTask task = new DemoTask();
         task.execute();
-
     }
 
     private String readStream(InputStream is) {
@@ -43,10 +49,9 @@ public class MainActivity extends AppCompatActivity {
     private class DemoTask extends AsyncTask<Void, Void, String> {
 
         protected String doInBackground(Void... urls) {
-            URL url = null;
             String result="";
             try {
-                url = new URL("https://www.android.com/");
+                URL url = new URL("https://itunes.apple.com/search?term=hoobastank");
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
                 result = readStream(in);
@@ -60,7 +65,12 @@ public class MainActivity extends AppCompatActivity {
         protected void onProgressUpdate(Integer... progress) {}
 
         protected void onPostExecute(String result) {
-            Log.v("httpresult",result);
+            AlbumParser albumParser = new AlbumParser();
+            try {
+                albumParser.parseJSONToAlbum(ctx, new JSONObject(result));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
