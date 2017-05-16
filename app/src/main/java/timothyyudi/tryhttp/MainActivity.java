@@ -1,10 +1,13 @@
 package timothyyudi.tryhttp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -18,61 +21,32 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Context ctx;
+    Button btnDefaultHTTP,btnVolley;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        ctx = this;
-        DemoTask task = new DemoTask();
-        task.execute(); //start requesting data from internet
+        btnDefaultHTTP = (Button) findViewById(R.id.btnDefaultHTTP);
+        btnDefaultHTTP.setOnClickListener(this);
+        btnVolley = (Button) findViewById(R.id.btnVolley);
+        btnVolley.setOnClickListener(this);
     }
 
-    /**read byte data pulled from internet and convert it to string*/
-    private String readStream(InputStream is) {
-        try {
-            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-            int i = is.read();
-            while (i != -1) {
-                buffer.write(i);
-                i = is.read();
-            }
-            return buffer.toString();
-        } catch (IOException e) {
-            return "";
-        }
-    }
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.btnDefaultHTTP:
+                Intent i = new Intent(this,DefaultHTTPActivity.class);
+                startActivity(i);
+                break;
+            case R.id.btnVolley:
+                Intent i2 = new Intent(this,VolleyActivity.class);
+                startActivity(i2);
+                break;
 
-    /**A background task which request data from internet*/
-    private class DemoTask extends AsyncTask<Void, Void, String> {
-
-        protected String doInBackground(Void... urls) {
-            String result="";
-            try {
-                URL url = new URL("https://itunes.apple.com/search?term=hoobastank");
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                result = readStream(in);
-                urlConnection.disconnect();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return result;
-        }
-
-        protected void onProgressUpdate(Integer... progress) {}
-
-        protected void onPostExecute(String result) {
-            AlbumParser albumParser = new AlbumParser(); //preparing an object of AlbumParser class
-            try {
-                albumParser.parseJSONToAlbum(ctx, new JSONObject(result)); //convert the string to JSON object and then read it using our own parser
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
         }
     }
 }

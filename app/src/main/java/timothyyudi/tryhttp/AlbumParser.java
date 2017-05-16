@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class AlbumParser {
 
     /**read the json, find the trackname and trackid. Finally, show it to the user using toast.*/
-    public void parseJSONToAlbum(Context ctx, JSONObject source){
+    public ArrayList<Album> parseJSONToAlbum(Context ctx, JSONObject source){
         ArrayList<Album> albums=new ArrayList<>();
         try {
             JSONArray arrAlbums = source.getJSONArray("results");
@@ -29,6 +29,7 @@ public class AlbumParser {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        return albums;
     }
 
 }
